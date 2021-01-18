@@ -1,0 +1,92 @@
+#include <dht.h>
+#include <LiquidCrystal.h>
+#include<SoftwareSerial.h>
+LiquidCrystal lcd(2,3,4,5,6,7);
+Int ldr=A0;11;
+Int p=0;
+Int light;
+Int soil=A1;
+Int moisture;
+Int pump=0;
+Char data=0;
+Dht DHT;
+#define Dht11_Pin 12
+Const byte rxPin=8;
+Cons byte txPin=9;
+SoftwareSerial ESP8266(rxPin,txPin);
+Void setup(){
+Lcd.begin(16,2);
+Serial.begin(9600);
+Delay(2000);
+pinMode(ldr,INPUT);
+pinMode(soil,INPUT);
+pinMode(pump,OUTPUT);
+digitalWrite(pump,LOW);
+lcd.setCursor(0,0);
+lcd.print(“SOLAR IRRIGATION”);
+lcd.setCursor(0,1);
+lcd.print(“SYSTEM USING IOT”);
+delay(2000);
+}
+String iotupdate(String A,String
+B,String C,String D,String E){
+Serial.println(“iotupdate”);
+connectserver();
+//lcd.clear();
+//lcd.setCursor(0,0);
+//lcd.print(“Updating Data…”);
+
+String
+cmd=”GET/index.php/iot_panel/iot_up
+date/1/2/0/82/”+E+”/78_79_80_81/”+
+A+”_”+B+”_”+C+”_”+D+”
+ESP8266.println(“AT+CIPSEND=4,”+
+String(cmd.length()+2);
+Delay(100);
+ESP8266.print(cmd);
+Serial.println(cmd);
+Delay(500);
+Return”done”;
+}
+Void connectserver(){
+//ESP8266.prinln(“AT”);
+//delay(1000);
+//lcd.clear();
+//lcd.print(“ConnetinServer”);
+Serial.println(“AT+CIPMUX=1”);
+Delay(200);
+ESP8266.println(“AT+CIPSTART=4,\”T
+CP\”,\”,80”);//)
+Delay(200);
+}
+Void loop()
+{
+Int chk=DHT.read11(DHT11_PIN);
+Light=analogRead(ldr);
+Moisture=analogRead(soil);
+lcd.print(“T=”);
+lcd.print(DHT.temperature);
+lcd.print((char)223);
+lcd.print(“C”);
+lcd.setCursor(10,0);
+lcd.print(“M=”);
+lcd.print(moisture);
+lcd.print(“”);
+lcd.setCursor(0,1);
+lcd.print(“L=”)
+lcd.print(light);
+lcd.print(“Lx”);
+lcd.setCursor(8,1);
+lcd.print(“H=”);
+lcd.print(“%”);
+if (moisture>=400)
+{
+digitalWrite(pump,HIGH);
+p=1;
+}
+else
+{
+digitalWrite(pump,LOW);
+p=0;
+}
+Delay(500);
